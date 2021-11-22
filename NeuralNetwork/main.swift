@@ -40,33 +40,17 @@ func x2() {
     print(neural.predict(inputs: [2, 3]))
 }
 
-func x3() {
-    let core = NeuralNetworkCore(activationFunction: .relu, learningRate: 0.01)
-    core.addLayer(inputsCount: 2, neuronsCount: 3)
-    core.addLayer(inputsCount: 3, neuronsCount: 1)
-    
-    let trainTestData: [[[Double]]] = [
-        [[1,0], [1]],
-        [[0, 0], [0]],
-        [[0, 1], [1]],
-        [[1, 1], [0]]
-    ]
-    
-    let testTestData: [[[Double]]] = [
-        [[0, 0], [0]],
-        [[1, 1], [0]]
-    ]
-    
-    core.train(dataset: trainTestData.toDataSet(), iterationNumbers: 100)
-    print(core.feedForward(inputs: [1,1]))
-}
-
 func x4() {
     let abTestData = getAbTestData()
     let abSolutions = getAbSolutions()
-    let neural = NeuralNetwork2(inputNeuronsCount: abTestData[0].count, hiddenNeuronsCount: abTestData[0].count + 20, outputNeuronsCount: abSolutions[0].count, learningRate: 0.001, activationFunc: .relu)
+    let neural = NeuralNetwork2(inputNeuronsCount: abTestData[0].count, hiddenNeuronsCount: abTestData[0].count + 5, outputNeuronsCount: abSolutions[0].count, learningRate: 0.001, activationFunc: .relu)
     neural.initialize()
-    neural.train(epochs: 70, printFrequency: 30, inputsAndOutputs: abTestComponize(abTestData, abSolutions).map { $0 })
+    neural.train(epochs: 50, printFrequency: 1, inputsAndOutputs: abTestComponize(abTestData, abSolutions).map { $0 })
+    while true {
+        let str = readLine()!
+        let x = str.filter { !$0.isWhitespace || !$0.isNewline }.components(separatedBy: ",").filter { $0 == "1.0" || $0 == "0.0" }.map { Double($0)! }
+        print(neural.forwardPropagation(input: x))
+    }
     let g = [0.0,1.0,1.0,1.0,1.0,0.0,
              1.0,1.0,0.0,0.0,1.0,1.0,
              1.0,0.0,0.0,0.0,0.0,1.0,
@@ -75,7 +59,7 @@ func x4() {
              1.0,1.0,0.0,0.0,0.0,1.0,
              0.0,1.0,0.0,0.0,0.0,1.0,
              0.0,0.0,1.0,1.0,1.0,1.0]
-    print(neural.forwardPropagation(input: g))
+//    print(neural.forwardPropagation(input: g))
 }
 
 x4()

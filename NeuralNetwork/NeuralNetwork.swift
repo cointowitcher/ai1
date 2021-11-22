@@ -63,7 +63,7 @@ class NeuralNetwork2 {
             for j in range(stop: inputNeuronsCount) {
                 value += hiddenWeights[j][i] * input[j]
             }
-            toHiddenValues.append(activationFunc.fun(value + hiddenBiases[i]))
+            toHiddenValues.append(activationFunc.fun(value))
         }
         // To output
         var outputValues = [Double]()
@@ -73,7 +73,7 @@ class NeuralNetwork2 {
             for j in range(stop: hiddenNeuronsCount) {
                 value += outputWeights[j][i] * toHiddenValues[j]
             }
-            outputValues.append(activationFunc.fun(value + outputBiases[i]))
+            outputValues.append(activationFunc.fun(value))
         }
         return (toHiddenValues, outputValues)
     }
@@ -108,32 +108,11 @@ class NeuralNetwork2 {
             hiddenDeltas.append(deltas)
         }
         
-        var hiddenDeltasSum = [Double]()
-        for i in range(stop: hiddenNeuronsCount) {
-            var sum: Double = 0
-            for j in range(stop: inputNeuronsCount) {
-                sum += hiddenDeltas[j][i]
-            }
-            hiddenDeltasSum.append(sum)
-        }
-        var outputDeltasSum = [Double]()
-        for i in range(stop: outputNeuronsCount) {
-            var sum: Double = 0
-            for j in range(stop: hiddenNeuronsCount) {
-                sum += outputDeltas[j][i]
-            }
-            outputDeltasSum.append(sum)
-        }
-        
         // apply
         for i in range(stop: hiddenNeuronsCount) {
             for j in range(stop: outputNeuronsCount) {
                 outputWeights[i][j] += outputDeltas[i][j]
             }
-            hiddenBiases[i] -= learningRate * hiddenDeltasSum[i]
-        }
-        for i in range(stop: outputNeuronsCount) {
-            outputBiases[i] -= learningRate * outputDeltasSum[i]
         }
         for i in range(stop: inputNeuronsCount) {
             for j in range(stop: hiddenNeuronsCount) {
